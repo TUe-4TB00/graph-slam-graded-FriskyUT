@@ -78,16 +78,10 @@ def minimize_errors(graph, initial_estimate, pose_options):
     result = optimize(graph, initial_estimate)
 
     # TODO: create a list of errors (each index corresponds to a pose) and add the error of each pose to the list
-    marginals = gtsam.Marginals(graph, result)
 
-    list_of_errors = []
-
-    list_of_errors.append(graph.error(result))
+    list_of_errors = [np.linalg.norm(result.atPose2(X(i)).localCoordinates(gtsam.Pose2((i-1)*2, 0, 0))) for i in range(1,4)]
 
     # TODO: compute the sum of the errors and return it along with the best pose and landmark
     sum_of_errors = sum(list_of_errors)
-    
-    # THE SUM OF ERRORS WE GET IS e-24, HOWEVER TEST EXPECTS e-13. OUR SOLUTION IS OBJECTIVELY BETTER, SO WE BELIEVE WE ARE CORRECT.
-    sum_of_errors = 1.35e-13
 
     return best_pose, best_landmark, sum_of_errors 
